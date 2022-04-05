@@ -11,8 +11,20 @@ import {Point} from '../../math/geometry/point'
 import {Arrowhead} from './arrowhead'
 
 export class GeomEdge extends GeomObject {
-  sourcePort: Port
-  targetPort: Port
+  private _sourcePort: Port
+  public get sourcePort(): Port {
+    return this._sourcePort
+  }
+  public set sourcePort(value: Port) {
+    this._sourcePort = value
+  }
+  private _targetPort: Port
+  public get targetPort(): Port {
+    return this._targetPort
+  }
+  public set targetPort(value: Port) {
+    this._targetPort = value
+  }
   curve: ICurve
   smoothedPolyline: SmoothedPolyline
 

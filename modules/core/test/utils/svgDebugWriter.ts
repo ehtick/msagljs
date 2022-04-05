@@ -253,7 +253,7 @@ export class SvgDebugWriter {
       if (!n.boundaryCurve) continue
       this.writeDebugCurve(DebugCurve.mkDebugCurveI(n.boundaryCurve))
       let box = n.boundingBox
-      if (n instanceof GeomGraph) {
+      if (n instanceof GeomGraph && (<GeomGraph>n).labelSize) {
         box = n.boundaryCurve.boundingBox
         const gg = <GeomGraph>n
         // we are in the flipped world
@@ -261,7 +261,7 @@ export class SvgDebugWriter {
 
         this.writeLabel(n.node, labelBox)
       } else {
-        this.writeLabel(n.node, box)
+        if (box) this.writeLabel(n.node, box)
       }
       for (const e of n.inEdges()) {
         this.writeEdge(e)

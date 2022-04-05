@@ -187,12 +187,12 @@ export class BundleRouter extends Algorithm {
   }
 
   FigureOutHookLocation(poly: Polyline, otherEdgeEndPort: Port, edgeGeom: GeomEdge): Point {
-    const clusterPort = <ClusterBoundaryPort>otherEdgeEndPort
-    if (clusterPort == null) {
+    const isClusterPort = otherEdgeEndPort instanceof ClusterBoundaryPort
+    if (!isClusterPort) {
       return this.FigureOutHookLocationForSimpleOtherPort(poly, otherEdgeEndPort, edgeGeom)
     }
 
-    return this.FigureOutHookLocationForClusterOtherPort(poly, clusterPort, edgeGeom)
+    return this.FigureOutHookLocationForClusterOtherPort(poly, <ClusterBoundaryPort>otherEdgeEndPort, edgeGeom)
   }
 
   FigureOutHookLocationForClusterOtherPort(poly: Polyline, otherEdgeEndPort: ClusterBoundaryPort, edgeGeom: GeomEdge): Point {

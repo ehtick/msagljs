@@ -12,6 +12,7 @@ import {
   MdsLayoutSettings,
   layoutGraphWithMds,
   GeomEdge,
+  BundlingSettings,
 } from '../../src'
 import {DrawingEdge, DrawingGraph, DrawingNode} from '../../src/drawing'
 import {GeomObject} from '../../src/layout/core/geomObject'
@@ -26,6 +27,8 @@ import {ShapeEnum} from '../../src/drawing/shapeEnum'
 import {initRandom} from '../../src/utils/random'
 import {EdgeRoutingSettings} from '../../src/routing/EdgeRoutingSettings'
 import {PlaneTransformation} from '../../src/math/geometry/planeTransformation'
+import {EdgeNudger} from '../../src/routing/spline/bundling/EdgeNudger'
+import {BundleBase} from '../../src/routing/spline/bundling/BundleBase'
 
 const socialNodes = [
   'Grenn',
@@ -712,6 +715,29 @@ test('edges with three obstacles', () => {
   sr.run()
   const t: SvgDebugWriter = new SvgDebugWriter('/tmp/edges_with_three_obstacles.svg')
   t.writeGeomGraph(g)
+})
+
+test('edge to a parent', () => {
+  // create a graph with a subgraph and a node inside of it
+  const g = new Graph('graph')
+  const a = new Graph('a')
+  g.addNode(a)
+  const b = a.addNode(new Node('b'))
+  const ab = new Edge(a, b)
+  // create geometry
+  const gg = new GeomGraph(g)
+  const ag = new GeomGraph(a)
+  ag.boundaryCurve = CurveFactory.mkCircle(100, new Point(0, 0))
+
+  const bg = new GeomNode(b)
+  // create a smaller circle for bg
+  bg.boundaryCurve = CurveFactory.mkCircle(30, new Point(0, 0))
+  new GeomEdge(ab)
+  const sr = SplineRouter.mk4(gg, 2, 4, Math.PI / 6)
+  sr.BundlingSettings = new BundlingSettings()
+  sr.run()
+  const t: SvgDebugWriter = new SvgDebugWriter('/tmp/edge_to_parent.svg')
+  t.writeGeomGraph(gg)
 })
 
 test('two edges with obstacle', () => {
